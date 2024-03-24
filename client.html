@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Crypto Screener</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    th, td {
+      padding: 10px;
+      border: 1px solid #ddd;
+    }
+    th {
+      background-color: #4CAF50;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <h1>Crypto Screener</h1>
+  <table id="crypto-table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Price</th>
+        <th>Price Change</th>
+        <th>Price Change %</th>
+        <th>Volume</th>
+        <th>Market Cap</th>
+        <th>Exchange</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const socket = io();
+    socket.on('screener-data', (data) => {
+      const cryptoTable = document.querySelector('#crypto-table tbody');
+      cryptoTable.innerHTML = '';
+      data.forEach((crypto) => {
+        const row = document.createElement('tr');
+        const nameCell = document.createElement('td');
+        nameCell.textContent = crypto.name;
+        row.appendChild(nameCell);
+        const priceCell = document.createElement('td');
+        priceCell.textContent = crypto.price.toFixed(2);
+        row.appendChild(priceCell);
+        const priceChangeCell = document.createElement('td');
+        priceChangeCell.textContent = crypto.priceChange.toFixed(2);
+        row.appendChild(priceChangeCell);
+        const priceChangePercentCell = document.createElement('td');
+        priceChangePercentCell.textContent = crypto.priceChangePercent.toFixed(2);
+        row.appendChild(priceChangePercentCell);
+        const volumeCell = document.createElement('td');
+        volumeCell.textContent = crypto.volume.toLocaleString();
+        row.appendChild(volumeCell);
+        const marketCapCell = document.createElement('td');
+        marketCapCell.textContent = crypto.marketCap.toLocaleString();
+        row.appendChild(marketCapCell);
+        const exchangeCell = document.createElement('td');
+        exchangeCell.textContent = crypto.exchange;
+        row.appendChild(exchangeCell);
+        cryptoTable.appendChild(row);
+      });
+    });
+  </script>
+</body>
+</html>
